@@ -1,0 +1,12 @@
+# Ignored files
+
+# Gradle
+.gradle/
+build/
+
+# Windows
+Thumbs.db
+
+# Mac
+.DS_Store
+

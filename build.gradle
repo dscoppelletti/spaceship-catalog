@@ -1,0 +1,93 @@
+plugins {
+    id 'version-catalog'
+    id 'maven-publish'
+}
+
+group = 'it.scoppelletti.spaceship'
+version = '1.1.0'
+description 'Spaceship Catalog'
+
+// Simulate Spaceship extension
+def developerName = 'Dario Scoppelletti'
+def developerEmail = 'dario@scoppelletti.it'
+def developerUrl = 'http://www.scoppelletti.it'
+def copyrightYear = '2023'
+def licenseName = 'The Apache License, Version 2.0'
+def licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+
+catalog {
+    versionCatalog {
+        version('agp', '7.4.2')
+        version('dokka', '1.7.20')
+        version('firebase', '31.2.3')
+        version('firebase.crashlytics', '2.9.4')
+        version('google.services', '4.3.15')
+        version('kotlin', '1.8.0')
+        version('ksp', '1.8.0-1.0.8')
+        version('navigation', '2.5.3')
+        version('sdk.min', '24') // libs.versions.sdk.min.get() as Integer
+        version('sdk.target', '33') // libs.versions.sdk.target.get() as Integer
+        version('spaceship', '1.1.0')
+        version('versions', '0.46.0')
+        library('bom.firebase', 'com.google.firebase', 'firebase-bom').versionRef('firebase')
+        library('bom.kotlin', 'org.jetbrains.kotlin', 'kotlin-bom').versionRef('kotlin')
+        library('bom.spaceship', 'it.scoppelletti.spaceship', 'spaceship-bom').versionRef('spaceship')
+        library('plugin.firebase.crashlytics', 'com.google.firebase', 'firebase-crashlytics-gradle').versionRef('firebase.crashlytics')
+        library('plugin.google.services', 'com.google.gms', 'google-services').versionRef('google.services')
+        library('plugin.navigation', 'androidx.navigation', 'navigation-safe-args-gradle-plugin').versionRef('navigation')
+        plugin('android.app', 'com.android.application').versionRef('agp')
+        plugin('android.lib', 'com.android.library').versionRef('agp')
+        plugin('dokka', 'org.jetbrains.dokka').versionRef('dokka')
+        plugin('kotlin.android', 'org.jetbrains.kotlin.android').versionRef('kotlin')
+        plugin('kotlin.jvm', 'org.jetbrains.kotlin.jvm').versionRef('kotlin')
+        plugin('ksp', 'com.google.devtools.ksp').versionRef('ksp')
+        plugin('spaceship.android.app', 'it.scoppelletti.spaceship.android-app').versionRef('spaceship')
+        plugin('spaceship.android.lib', 'it.scoppelletti.spaceship.android-library').versionRef('spaceship')
+        plugin('spaceship.java.lib', 'it.scoppelletti.spaceship.java-library').versionRef('spaceship')
+        plugin('versions', 'com.github.ben-manes.versions').versionRef('versions')
+    }
+}
+
+publishing {
+    publications {
+        catalog(MavenPublication) {
+            from components.versionCatalog
+
+            artifactId = 'spaceship-catalog'
+
+            pom {
+                name = rootProject.name
+                description = project.description
+                url = 'http://github.com/dscoppelletti/spaceship-catalog'
+                inceptionYear = copyrightYear
+                developers {
+                    developer {
+                        name = developerName
+                        email = developerEmail
+                        url = developerUrl
+                    }
+                }
+                licenses {
+                    license {
+                        name = licenseName
+                        url = licenseUrl
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:dscoppelletti/spaceship-catalog.git'
+                    developerConnection = 'scm:git:git@github.com:dscoppelletti/spaceship-catalog.git'
+                    url = 'git@github.com:dscoppelletti/spaceship-catalog.git'
+                }
+            }
+        }
+    }
+
+    if (project.hasProperty('it.scoppelletti.spaceship.repository.url')) {
+        repositories {
+            maven {
+                name = 'dev'
+                url = project.property('it.scoppelletti.spaceship.repository.url')
+            }
+        }
+    }
+}
